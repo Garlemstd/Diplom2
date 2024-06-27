@@ -1,21 +1,4 @@
-import pytest
-from data.user_data import UserData
 import allure
-
-
-@pytest.fixture
-def delete_user_after_run_test(user_steps, login_steps):
-    with allure.step('Удаление пользователя после теста'):
-        yield
-        authorization = login_steps.authorization_by_user()
-        assert authorization.ok
-        delete_user = user_steps.delete_user()
-        assert delete_user.ok
-
-
-@pytest.fixture
-def user_data():
-    return UserData()
 
 
 class TestUser:

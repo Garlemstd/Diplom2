@@ -1,27 +1,11 @@
-import pytest
 from data.user_data import UserData
 import allure
-
-@pytest.fixture(autouse=True)
-def create_and_delete_user_for_login(user_steps, login_steps):
-    """Эта фикстура не в conftest, т.к. она autouse - это может быть опасно, помещать ее в conftest"""
-    user_steps.register_user()
-    yield
-    login_steps.authorization_by_user()
-    user_steps.delete_user()
-
-
-@pytest.fixture
-def prepare_random_user():
-    user = UserData().login_body().copy()
-    user["email"] = 'randomemailnonexisting@mmail.ru'
-    return user
 
 
 class TestLogin:
 
     @allure.title("Авторизация от лица тестового пользователя")
-    def test_user_authorization(self, login_steps):
+    def test_user_authorization(self, login_steps, create_and_delete_user_for_test):
         user_authorization = login_steps.authorization_by_user()
         assert user_authorization.ok
 
@@ -32,7 +16,7 @@ class TestLogin:
         assert invalid_authorization.json()['message'] == exceptions.incorrect_credentials
 
     @allure.title("Редактирование тестового пользователя с авторизационным токеном")
-    def test_edit_user_with_authorization_token(self, login_steps, user_steps):
+    def test_edit_user_with_authorization_token(self, login_steps, user_steps, create_and_delete_user_for_test):
         user_authorization = login_steps.authorization_by_user()
         assert user_authorization.ok
         update_user = user_steps.update_user(user=UserData().user_body())
