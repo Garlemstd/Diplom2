@@ -21,7 +21,7 @@ class OrderSteps:
         return self.api_client.post(self.order_route, json=order_data, headers=Header(token).authorization_header())
 
     @step('Просмотр заказов пользователя')
-    def get_user_orders(self, user=None, token=None):
+    def get_user_orders(self, token=None):
         if not token:
             token = self.authorization()
         return self.api_client.get(self.order_route, headers=Header(token).authorization_header())

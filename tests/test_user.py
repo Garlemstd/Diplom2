@@ -1,4 +1,5 @@
 import allure
+from data.user_data import UserData
 
 
 class TestUser:
@@ -17,7 +18,7 @@ class TestUser:
         assert create_user_duplicate.json()['message'] == exceptions.user_duplicate
 
     @allure.title("Регистрация некорректного пользователя (без почты)")
-    def test_register_invalid_user(self, user_steps, user_data, exceptions):
-        create_user_without_email = user_steps.register_user(user=user_data.invalid_user_body())
+    def test_register_invalid_user(self, user_steps, exceptions):
+        create_user_without_email = user_steps.register_user(user=UserData().invalid_user_body())
         assert create_user_without_email.status_code == 403
         assert create_user_without_email.json()['message'] == exceptions.no_required_field

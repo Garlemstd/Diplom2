@@ -1,5 +1,4 @@
 from allure import step
-from data.user_data import UserData
 
 
 class Assertions:

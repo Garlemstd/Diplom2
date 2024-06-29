@@ -1,6 +1,6 @@
 from data.user_data import UserData
+from data.order_data import OrderData
 import allure
-
 
 
 class TestOrder:
@@ -23,17 +23,15 @@ class TestOrder:
         assert make_an_order_with_ingredients.ok
 
     @allure.title("Создание заказа без ингредиентов")
-    def test_make_an_order_without_ingredients(self, order_steps, no_ingredients_data, exceptions,
-                                               create_and_delete_user_for_test):
-        make_an_order_without_ingredients = order_steps.make_an_order(order_data=no_ingredients_data)
+    def test_make_an_order_without_ingredients(self, order_steps, exceptions, create_and_delete_user_for_test):
+        make_an_order_without_ingredients = order_steps.make_an_order(order_data=OrderData().empty_ingredients_data())
         assert make_an_order_without_ingredients.status_code == 400
         assert make_an_order_without_ingredients.json()['message'] == exceptions.no_ingredients_order
 
     @allure.title("Создание заказа с несуществующим ID ингредиента")
-    def test_make_an_order_with_fake_ingredient_id(self, order_steps, fake_ingredient_data,
-                                                   create_and_delete_user_for_test):
-        make_an_order_with_fake_ingredient_id = order_steps.make_an_order(order_data=fake_ingredient_data)
-        assert make_an_order_with_fake_ingredient_id.status_code == 500
+    def test_make_an_order_with_fake_ingredient_id(self, order_steps, create_and_delete_user_for_test):
+        make_order_with_fake_ingredient_id = order_steps.make_an_order(order_data=OrderData().fake_ingredients_data())
+        assert make_order_with_fake_ingredient_id.status_code == 500
 
     @allure.title("Получение собственных заказов с авторизацией")
     def test_get_user_orders_with_authorization(self, order_steps, assertions, create_and_delete_user_for_test):
